@@ -1,7 +1,13 @@
 package com.recyclerview_list.model;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -10,6 +16,7 @@ import java.util.List;
  */
 
 public class Response {
+    private static final String TAG = "Response";
 
     @SerializedName("timestamp")
     @Expose
@@ -87,5 +94,21 @@ public class Response {
      */
     public void setType(String type) {
         this.type = type;
+    }
+
+
+    public JSONObject toJson() {
+        String jsonRepresentation = new Gson().toJson(this, Response.class);
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(jsonRepresentation);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error converting to JSON in toJson(): " + e.getMessage());
+        }
+        return jsonObject;
+    }
+
+    public static Response fromJson(String jsonString) {
+        return new Gson().fromJson(jsonString, Response.class);
     }
 }
