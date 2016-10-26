@@ -28,7 +28,7 @@ public class RetrofitHandler {
     private RetrofitHandler() {
     }
 
-    public  Call<List<Response>> getMessageList() {
+    public  Call<Response> getMessageList() {
         return service.getMessageList();
     }
 }

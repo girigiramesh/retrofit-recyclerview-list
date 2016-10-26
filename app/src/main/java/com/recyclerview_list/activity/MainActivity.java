@@ -7,14 +7,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.recyclerview_list.R;
 import com.recyclerview_list.adapter.ListAdapter;
 import com.recyclerview_list.model.Response;
 import com.recyclerview_list.network.RetrofitHandler;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -42,28 +40,14 @@ public class MainActivity extends BaseActivity {
         rv_lists = (RecyclerView) findViewById(R.id.rv_lists);
 
         showProgressDialog("please wait...!");
-        RetrofitHandler.getInstance().getMessageList().enqueue(new Callback<List<Response>>() {
+        RetrofitHandler.getInstance().getMessageList().enqueue(new Callback<Response>() {
             @Override
-            public void onResponse(Call<List<Response>> call, retrofit2.Response<List<Response>> response) {
+            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 dismissProgressDialog();
                 if (response.isSuccessful()) {
                     JSONObject jsonRootObject = new JSONObject();
                     JSONArray jsonArray = jsonRootObject.optJSONArray("response");
                     List<Response> responseList = new ArrayList<>();
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        try {
-                            JSONObject finalObject = jsonArray.getJSONObject(i);
-                            Response responseModel = new Response();
-                            responseModel.setText(finalObject.getString("text"));
-                            responseModel.setText(finalObject.getString("timestamp"));
-                            responseModel.setChannel(finalObject.getString("channel"));
-                            responseModel.setType(finalObject.getString("type"));
-                            responseList.add(responseModel);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
                     buildList(responseList);
                 } else {
                     Log.e(TAG, "onResponse: " + response.raw());
@@ -71,7 +55,7 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Response>> call, Throwable t) {
+            public void onFailure(Call<Response> call, Throwable t) {
                 dismissProgressDialog();
                 Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
             }

@@ -15,5 +15,5 @@ import retrofit2.http.Query;
 public interface HumOsStaging {
 
     @GET("/api/v3/messages")
-    Call<List<Response>> getMessageList();
+    Call<Response> getMessageList();
 }
